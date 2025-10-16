@@ -89,7 +89,7 @@ function show(
     const audio = new Audio(chrome.runtime.getURL(sounds[bannerSounds[action]]))
     audio.volume = 0.25
 
-    setTimeout(() => {
+    const firstTimer = setTimeout(() => {
         requestIdleCallback(() => {
             document.body.appendChild(banner)
 
@@ -99,19 +99,22 @@ function show(
                 fill: 'forwards'
             })
 
-            audio.play().catch(() => {})
+            audio.play().catch(() => {});
+            clearTimeout(firstTimer)
         })
     }, delay)
 
-    setTimeout(() => {
+    const secondTimer = setTimeout(() => {
         banner.animate([{ opacity: 1 }, { opacity: 0 }], {
             duration: animations.duration,
             easing: animations.easings.easeOutQuart,
             fill: 'forwards'
         })
+        clearTimeout(secondTimer)
 
-        setTimeout(() => {
+        const thirdTimer = setTimeout(() => {
             banner.remove()
+            clearTimeout(thirdTimer);
         }, animations.duration + delay)
     }, animations.span + delay)
 }
